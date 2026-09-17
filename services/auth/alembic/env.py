@@ -4,6 +4,8 @@ Dès que app/models.py définit `Base` (TP3), l'autogénération fonctionne :
     alembic revision --autogenerate -m "..."
     alembic upgrade head
 """
+
+
 import asyncio
 import os
 

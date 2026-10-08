@@ -3,9 +3,22 @@ from app.schemas import ProduitCreate, ProduitRead
 router = APIRouter(prefix="/produits", tags=["produits"])
 _db: dict[int, ProduitRead] = {} # stockage en mémoire pour cette séance
 _next_id = 1
+
+
+from sqlalchemy import select
+from app.db import SessionLocal
+from app.models import Produit
 @router.get("", response_model=list[ProduitRead])
 async def lister():
-    return list(_db.values())
+ async with SessionLocal() as session:
+   result = await session.execute(select(Produit))
+ return result.scalars().all()
+
+
+
+# @router.get("", response_model=list[ProduitRead])
+# async def lister():
+#     return list(_db.values())
 
 @router.get("/{produit_id}", response_model=ProduitRead)
 async def consulter(produit_id: int):

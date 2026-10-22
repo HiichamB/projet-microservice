@@ -24,9 +24,9 @@ def frapper(client):
     debut = time.monotonic()
     try:
         if random.random() < 0.5:
-            r = client.get("/produits")
+            r = client.get("/personnes")
         else:
-            r = client.post("/produits", json={"nom": f"p{random.randint(1, 10 ** 6)}",
+            r = client.post("/personnes", json={"nom": f"p{random.randint(1, 10 ** 6)}",
                                                "prix": random.randint(1, 500), "stock": 1})
         duree = time.monotonic() - debut
         if duree > SEUIL_SALE or r.status_code >= 500 and r.status_code != 503:

@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         # TODO (TP9) : ajoutez vos autres services à la matrice
-        service: [catalogue]
+        service: [user]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

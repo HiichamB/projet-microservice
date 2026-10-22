@@ -14,10 +14,10 @@ Sert à récupérer le dépôt et à poser un tag à la fin de chaque séance. S
 l'installeur fournit aussi Git Bash, un terminal où les commandes du cours fonctionnent
 telles quelles.
 
-| Système | Commande |
-|---|---|
-| Windows | `winget install --id Git.Git -e` |
-| macOS | `xcode-select --install` |
+| Système                | Commande                                     |
+| ---------------------- | -------------------------------------------- |
+| Windows                | `winget install --id Git.Git -e`             |
+| macOS                  | `xcode-select --install`                     |
 | Linux (Debian, Ubuntu) | `sudo apt update && sudo apt install -y git` |
 
 Renseignez ensuite votre identité, sinon le premier commit sera refusé :
@@ -77,11 +77,11 @@ baleine visible ; fermé, toutes les commandes docker échouent.
 Les cinq services déclarent `requires-python = ">=3.12"`. Une version 3.11 ne bloque pas
 Docker, mais elle empêche d'installer les services et de lancer les tests sur votre machine.
 
-| Système | Comment |
-|---|---|
-| Windows | Installeur depuis python.org, en cochant « Add python.exe to PATH » sur le premier écran |
-| macOS | `brew install python@3.12` |
-| Linux (Debian, Ubuntu) | `sudo apt install -y python3.12 python3.12-venv` |
+| Système                | Comment                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| Windows                | Installeur depuis python.org, en cochant « Add python.exe to PATH » sur le premier écran |
+| macOS                  | `brew install python@3.12`                                                               |
+| Linux (Debian, Ubuntu) | `sudo apt install -y python3.12 python3.12-venv`                                         |
 
 > **Piège Windows.** N'installez pas Python depuis le Microsoft Store. Sa version reste
 > bloquée en 3.11, elle ne fournit pas le lanceur `py`, et l'installation du service s'arrête
@@ -125,7 +125,7 @@ Installez enfin le service exemple et ses dépendances de test. Cette seule comm
 FastAPI, pytest, ruff et httpx, ce dernier étant ce dont les scripts du cours ont besoin :
 
 ```bash
-pip install -e "./services/catalogue[test]"
+pip install -e "./services/user[test]"
 ```
 
 **Contrôle** — `pytest --version` et `ruff --version` répondent tous les deux sans erreur.
@@ -152,7 +152,7 @@ palette de VS Code et lancez « Shell Command: Install 'code' command in PATH »
 
 ## 6. L'essai qui valide tout
 
-Cette commande construit l'image du service Catalogue, démarre sa base PostgreSQL, attend
+Cette commande construit l'image du service User, démarre sa base PostgreSQL, attend
 qu'elle soit saine, puis lance le service. Le premier lancement télécharge plusieurs
 centaines de mégaoctets, les suivants durent quelques secondes.
 
@@ -170,7 +170,7 @@ curl http://localhost:8000/health
 **Contrôle** — la réponse attendue, au caractère près :
 
 ```json
-{"status":"ok","service":"catalogue"}
+{ "status": "ok", "service": "user" }
 ```
 
 Si vous l'obtenez, votre poste est prêt. Arrêtez tout avec `Ctrl+C` puis `docker compose down`.
@@ -219,11 +219,11 @@ python -X utf8 scripts/check_tp2.py http://localhost:8000
 Passez ces six lignes avant d'arriver en séance. Si l'une échoue, revenez à l'étape
 correspondante.
 
-| Étape | Commande | Réponse attendue |
-|---|---|---|
-| 1 | `git --version` | un numéro de version |
-| 2 | `docker compose version` | v2 ou plus |
-| 2 | `docker run --rm hello-world` | le message de bienvenue |
-| 3 | `python --version` | 3.12 au minimum |
-| 4 | `pytest --version` | un numéro de version |
-| 6 | `curl localhost:8000/health` | `status` ok, `service` catalogue |
+| Étape | Commande                      | Réponse attendue            |
+| ----- | ----------------------------- | --------------------------- |
+| 1     | `git --version`               | un numéro de version        |
+| 2     | `docker compose version`      | v2 ou plus                  |
+| 2     | `docker run --rm hello-world` | le message de bienvenue     |
+| 3     | `python --version`            | 3.12 au minimum             |
+| 4     | `pytest --version`            | un numéro de version        |
+| 6     | `curl localhost:8000/health`  | `status` ok, `service` user |

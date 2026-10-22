@@ -18,7 +18,7 @@ docker compose up --build
 ├── .github/workflows/    # pipeline CI (complété au TP9)
 ├── docker-compose.yml    # orchestration (complété au fil des TP)
 ├── services/
-│   ├── catalogue/        # service exemple : le plus complet, servez-vous-en de modèle
+│   ├── user/        # service exemple : le plus complet, servez-vous-en de modèle
 │   ├── commandes/
 │   ├── auth/
 │   ├── paiement/         # simulateur de paiement (TP7)

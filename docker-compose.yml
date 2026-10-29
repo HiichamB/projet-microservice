@@ -1,6 +1,6 @@
 # Orchestration du projet — complétée au fil des séances.
 # TP1 : user + sa base démarrent tels quels.
-# TP4 : déclarez commandes + db-commandes sur le modèle du user.
+# TP4 : déclarez personne + db-personne sur le modèle du user.
 # TP6 : dé-commentez rabbitmq puis notifications.
 # TP7 : dé-commentez paiement.  TP8 : déclarez auth + db-auth.
 
@@ -28,6 +28,52 @@ services:
       retries: 5
     restart: always
 
+  livre:
+    build: services/livre
+    environment:
+      DATABASE_URL: ${LIVRE_DATABASE_URL}
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    ports:
+      - "8001:8000"
+    depends_on:
+      db-livre:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: always
+
+  emprunte:
+    build: services/emprunte
+    environment:
+      DATABASE_URL: ${EMPRUNTE_DATABASE_URL}
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    ports:
+      - "8002:8000"
+    depends_on:
+      db-emprunte:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: always
+
   db-user:
     image: postgres:16-alpine
     environment:
@@ -41,6 +87,35 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  db-livre:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: livre
+    volumes:
+      - data-livre:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d livre"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      
+  db-emprunte:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: emprunte
+    volumes:
+      - data-emprunte:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d emprunte"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 
   # ---- TP4 — À vous : commandes + db-commandes, sur le modèle ci-dessus ----
   # (port conseillé : 8002:8000 ; base : COMMANDES_DATABASE_URL)
@@ -80,3 +155,5 @@ services:
 
 volumes:
   data-user:
+  data-livre:
+  data-emprunte:

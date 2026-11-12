@@ -20,7 +20,7 @@ docker compose up --build
 ├── services/
 │   ├── user/        # service exemple : le plus complet, servez-vous-en de modèle
 │   ├── livre/
-│   ├── emprunte/
+│   ├── emprunt/
 │   ├── paiement/         # simulateur de paiement (TP7)
 │   └── notifications/    # consommateur d'événements (TP6)
 ├── scripts/              # check_tp2.py, chaos.py, trafic.py

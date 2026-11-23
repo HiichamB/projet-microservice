@@ -29,29 +29,29 @@ services:
       retries: 5
     restart: always
 
-  livre:
-    build: services/livre
-    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
-    environment:
-      DATABASE_URL: ${LIVRE_DATABASE_URL}
-      RABBITMQ_URL: ${RABBITMQ_URL}
-    ports:
-      - "8001:8000"
-    depends_on:
-      db-livre:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "python",
-          "-c",
-          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
-        ]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-    restart: always
+  # livre:
+  #   build: services/livre
+  #   command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+  #   environment:
+  #     DATABASE_URL: ${LIVRE_DATABASE_URL}
+  #     RABBITMQ_URL: ${RABBITMQ_URL}
+  #   ports:
+  #     - "8001:8000"
+  #   depends_on:
+  #     db-livre:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "python",
+  #         "-c",
+  #         "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+  #       ]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 5
+  #   restart: always
 
   emprunt:
     build: services/emprunt
@@ -91,19 +91,19 @@ services:
       timeout: 3s
       retries: 10
 
-  db-livre:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: livre
-    volumes:
-      - data-livre:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app -d livre"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+  # db-livre:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: app
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_DB: livre
+  #   volumes:
+  #     - data-livre:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U app -d livre"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 10
       
   db-emprunt:
     image: postgres:16-alpine
@@ -124,25 +124,25 @@ services:
   # (port conseillé : 8002:8000 ; base : COMMANDES_DATABASE_URL)
 
   # ---- TP6 — dé-commentez : ----------------------------------------------
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"   # interface de gestion : http://localhost:15672 (guest/guest)
-  #   healthcheck:
-  #     test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 10
-  #
-  # notifications:
-  #   build: services/notifications
-  #   environment:
-  #     RABBITMQ_URL: ${RABBITMQ_URL}
-  #   depends_on:
-  #     rabbitmq:
-  #       condition: service_healthy
-  #   restart: always
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"   # interface de gestion : http://localhost:15672 (guest/guest)
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  
+  notifications:
+    build: services/notifications
+    environment:
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: always
 
   # ---- TP7 — dé-commentez : ----------------------------------------------
   # paiement:

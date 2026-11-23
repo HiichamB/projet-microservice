@@ -12,3 +12,4 @@ class Emprunt(Base):
  datePrevuRetour: Mapped[date] = mapped_column()
  dateRetourReelle: Mapped[date | None] = mapped_column()  # vide tant que le livre n'est pas rendu
  statut: Mapped[str] = mapped_column(default="en cours")  # "en cours", "rendu" ou "retard"
+ email: Mapped[str] = mapped_column(server_default="lecteur@demo.biblio")  # valeur pour les lignes déjà en base

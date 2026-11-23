@@ -7,6 +7,9 @@ from sqlalchemy import select
 from app.db import SessionLocal
 from app.models import Emprunt
 from app.clients.user import get_personne
+from app.events.publisher import publier
+import logging
+logger = logging.getLogger("emprunt")
 
 
 
@@ -42,6 +45,16 @@ async def creer(emprunt: EmpruntCreate):
         session.add(nouveau)
         await session.commit()
         await session.refresh(nouveau)
+    # APRÈS le commit : on n'annonce jamais un fait qui n'a pas encore eu lieu
+    try:
+        await publier("emprunt.created", {
+            "emprunt_id": nouveau.id,
+            "email": nouveau.email,
+            "livre_id": nouveau.livre_id,
+            "datePrevuRetour": nouveau.datePrevuRetour.isoformat(),
+        })
+    except Exception as exc:  # broker coupé : l'emprunt reste créé (201)
+        logger.warning("événement emprunt.created non publié (%s)", exc)
     return nouveau
 
 
